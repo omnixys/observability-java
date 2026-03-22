@@ -13,7 +13,7 @@
 
     <groupId>com.omnixys.observability</groupId>
     <artifactId>omnixys-observability</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
 
     <name>observability</name>
     <description>Omnixys Observability Core Package</description>
