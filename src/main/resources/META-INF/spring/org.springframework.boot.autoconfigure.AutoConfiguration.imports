@@ -1,0 +1,3 @@
+com.omnixys.observability.autoconfigure.ObservabilityAutoConfiguration
+com.omnixys.observability.metrics.MetricsAutoConfiguration
+com.omnixys.observability.http.HttpTracingAutoConfiguration

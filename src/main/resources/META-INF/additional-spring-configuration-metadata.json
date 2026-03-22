@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "omnixys.observability.service-name",
+      "type": "java.lang.String",
+      "description": "Service name for tracing resource"
+    }
+  ]
+}
