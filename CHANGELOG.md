@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.0.0](https://github.com/omnixys/observability-java/compare/v1.0.0...v2.0.0) (2026-03-25)
+
+### Api
+
+* **Api:** Add OpenTelemetry tracing APIs and integrations ([](https://github.com/omnixys/observability-java/commit/e623167d4e066139baeaaf9167ac0c97475b7f59))
+
 ## 1.0.0 (2026-03-22)
 
 ### Init
