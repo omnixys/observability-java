@@ -3,17 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://www.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-
     <groupId>com.omnixys.observability</groupId>
     <artifactId>omnixys-observability</artifactId>
     <version>1.0.0</version>
+
+
+    <modelVersion>4.0.0</modelVersion>
 
     <name>observability</name>
     <description>Omnixys Observability Core Package</description>
@@ -55,8 +50,10 @@
 
     <properties>
         <java.version>25</java.version>
+        <maven.compiler.release>25</maven.compiler.release>
         <spring.boot.version>4.0.4</spring.boot.version>
         <otel.version>1.38.0</otel.version>
+        <aspectjweaver.version>1.9.25.1</aspectjweaver.version>
     </properties>
 
 
@@ -82,6 +79,17 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-graphql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>

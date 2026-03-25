@@ -1,5 +1,6 @@
 package com.omnixys.observability.autoconfigure;
 
+import com.omnixys.observability.annotation.SpanAspect;
 import com.omnixys.observability.context.TraceContextExtractor;
 import com.omnixys.observability.metrics.MetricsAutoConfiguration;
 import com.omnixys.observability.properties.ObservabilityProperties;
@@ -31,5 +32,11 @@ public class ObservabilityAutoConfiguration {
     @ConditionalOnProperty(prefix = "omnixys.observability.tracing", name = "enabled", havingValue = "true", matchIfMissing = true)
     public OpenTelemetry openTelemetry() {
         return OpenTelemetryFactory.create(properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SpanAspect spanAspect() {
+        return new SpanAspect();
     }
 }
