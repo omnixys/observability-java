@@ -1,8 +1,10 @@
 package com.omnixys.observability.autoconfigure;
 
 import com.omnixys.observability.annotation.SpanAspect;
+import com.omnixys.observability.api.TracePropagation;
 import com.omnixys.observability.context.TraceContextExtractor;
 import com.omnixys.observability.metrics.MetricsAutoConfiguration;
+import com.omnixys.observability.otel.OpenTelemetryTracePropagation;
 import com.omnixys.observability.properties.ObservabilityProperties;
 import com.omnixys.observability.tracing.OpenTelemetryFactory;
 import io.opentelemetry.api.OpenTelemetry;
@@ -38,5 +40,17 @@ public class ObservabilityAutoConfiguration {
     @ConditionalOnMissingBean
     public SpanAspect spanAspect() {
         return new SpanAspect();
+    }
+
+    /**
+     * Provides the TracePropagation implementation.
+     *
+     * This bean explicitly depends on OpenTelemetry via constructor injection,
+     * avoiding any early access to GlobalOpenTelemetry.
+     */
+    @Bean
+    @ConditionalOnMissingBean(TracePropagation.class)
+    public TracePropagation<Object> tracePropagation(OpenTelemetry openTelemetry) {
+        return new OpenTelemetryTracePropagation(openTelemetry);
     }
 }

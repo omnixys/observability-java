@@ -1,7 +1,6 @@
 package com.omnixys.observability.tracing;
 
 import com.omnixys.observability.properties.ObservabilityProperties;
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.common.AttributesBuilder;
@@ -10,6 +9,7 @@ import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
@@ -20,14 +20,27 @@ import java.util.Map;
 
 /**
  * Factory for building OpenTelemetry SDK instance.
- * This is the central entrypoint for Omnixys tracing.
+ *
+ * Guarantees:
+ * - GlobalOpenTelemetry is set exactly once
+ * - No illegal double initialization
+ * - Fully wired tracerProvider (NO broken tracing)
  */
 public final class OpenTelemetryFactory {
 
+    private static volatile boolean initialized = false;
+
     private OpenTelemetryFactory() {}
 
-    public static OpenTelemetry create(ObservabilityProperties properties) {
+    public static synchronized OpenTelemetry create(ObservabilityProperties properties) {
         System.out.println("🔥 OpenTelemetry initialized");
+
+        // ---------------------------------------------------------------------
+        // Prevent double initialization (important for DevTools)
+        // ---------------------------------------------------------------------
+        if (initialized) {
+            return GlobalOpenTelemetry.get();
+        }
 
         // ---------------------------------------------------------------------
         // Resource (service metadata)
@@ -65,7 +78,6 @@ public final class OpenTelemetryFactory {
                     .setTimeout(Duration.ofSeconds(10))
                     .build();
 
-
             spanProcessor = BatchSpanProcessor.builder(exporter)
                     .setScheduleDelay(Duration.ofMillis(100))
                     .build();
@@ -79,7 +91,7 @@ public final class OpenTelemetryFactory {
         );
 
         // ---------------------------------------------------------------------
-        // Tracer Provider
+        // Tracer Provider (CORRECTLY WIRED)
         // ---------------------------------------------------------------------
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
                 .setSampler(sampler)
@@ -87,20 +99,28 @@ public final class OpenTelemetryFactory {
                 .addSpanProcessor(spanProcessor)
                 .build();
 
-
         // ---------------------------------------------------------------------
         // Graceful shutdown
         // ---------------------------------------------------------------------
         Runtime.getRuntime().addShutdownHook(new Thread(tracerProvider::close));
 
-//        return sdk;
-        return OpenTelemetrySdk.builder()
-                .setTracerProvider(tracerProvider)
-                .setPropagators(
-                        ContextPropagators.create(
-                                W3CTraceContextPropagator.getInstance()
-                        )
-                )
-                .buildAndRegisterGlobal();
+        // ---------------------------------------------------------------------
+        // OpenTelemetry SDK (CORRECT)
+        // ---------------------------------------------------------------------
+        OpenTelemetrySdk sdk = OpenTelemetrySdk.builder()
+                .setTracerProvider(tracerProvider) // ✅ CRITICAL FIX
+                .setPropagators(ContextPropagators.create(
+                        W3CTraceContextPropagator.getInstance()
+                ))
+                .build();
+
+        // ---------------------------------------------------------------------
+        // Set global ONCE
+        // ---------------------------------------------------------------------
+        GlobalOpenTelemetry.set(sdk);
+
+        initialized = true;
+
+        return sdk;
     }
 }

@@ -2,14 +2,24 @@ package com.omnixys.observability.otel;
 
 import com.omnixys.observability.api.*;
 import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.*;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
+import lombok.AllArgsConstructor;
 
 public class OpenTelemetryTracePropagation implements TracePropagation<Object> {
 
-    private final Tracer tracer =
-            GlobalOpenTelemetry.getTracer("omnixys");
+    private final Tracer tracer;
+
+    /**
+     * Constructor with explicit dependency injection.
+     *
+     * @param openTelemetry the OpenTelemetry instance managed by Spring
+     */
+    public OpenTelemetryTracePropagation(OpenTelemetry openTelemetry) {
+        this.tracer = openTelemetry.getTracer("omnixys");
+    }
 
     @Override
     public void inject(Object carrier) {
