@@ -4,6 +4,7 @@ import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.context.Context;
 
+@Deprecated(forRemoval = true)
 public final class TraceContextExtractor {
 
     private TraceContextExtractor() {}

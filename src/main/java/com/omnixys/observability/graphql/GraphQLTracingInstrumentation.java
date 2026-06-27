@@ -1,5 +1,6 @@
 package com.omnixys.observability.graphql;
 
+import com.omnixys.observability.tracing.SpanEnricher;
 import graphql.ExecutionResult;
 import graphql.execution.instrumentation.InstrumentationContext;
 import graphql.execution.instrumentation.SimpleInstrumentation;
@@ -40,6 +41,7 @@ public class GraphQLTracingInstrumentation extends SimpleInstrumentation {
             @Override
             public void onDispatched() {
                 scope = span.makeCurrent();
+                SpanEnricher.enrich(span);
             }
 
             @Override

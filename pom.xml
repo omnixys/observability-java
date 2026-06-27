@@ -3,17 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://www.apache.org/xsd/maven-4.0.0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/>
+    </parent>
 
     <groupId>com.omnixys</groupId>
     <artifactId>observability</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <name>observability</name>
-    <description>Omnixys Observability Core Package</description>
-
+    <name>Omnixys Observability Package</name>
+    <description>Omnixys Observability Core Package — tracing, metrics, OpenTelemetry integration</description>
     <url>https://github.com/omnixys/observability-java</url>
 
     <licenses>
@@ -47,88 +52,76 @@
         <tag>HEAD</tag>
     </scm>
 
-<packaging>jar</packaging>
-
     <properties>
-        <java.version>25</java.version>
-        <maven.compiler.release>25</maven.compiler.release>
-        <spring.boot.version>4.0.4</spring.boot.version>
-        <otel.version>1.38.0</otel.version>
-        <aspectjweaver.version>1.9.25.1</aspectjweaver.version>
+        <java.version>26</java.version>
+        <maven.compiler.release>26</maven.compiler.release>
     </properties>
 
-
-<distributionManagement>
-    <repository>
-        <id>github</id>
-        <name>GitHub Packages</name>
-        <url>https://maven.pkg.github.com/omnixys/observability-java</url>
-    </repository>
-</distributionManagement>
-
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/omnixys/observability-java</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-graphql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectjweaver.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <!-- Micrometer -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-
-        <!-- OpenTelemetry -->
+        <!-- OpenTelemetry — versions managed by spring-boot-dependencies BOM -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-api</artifactId>
-            <version>${otel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-sdk</artifactId>
-            <version>${otel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-exporter-otlp</artifactId>
-            <version>${otel.version}</version>
+        </dependency>
+
+        <!-- Spring Boot auto-configuration -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- AspectJ for @TraceSpan annotation -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+
+        <!-- Optional: GraphQL tracing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-graphql</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Actuator + Prometheus metrics -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+
+        <!-- Provided: Servlet API for HTTP filter -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Lombok -->
@@ -138,6 +131,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.omnixys</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.omnixys</groupId>
+            <artifactId>context</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Config metadata -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -145,12 +150,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Test -->
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

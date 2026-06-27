@@ -2,6 +2,7 @@ package com.omnixys.observability.propagation;
 
 import com.omnixys.observability.context.ITraceContext;
 
+@Deprecated(forRemoval = true)
 public interface ContextPropagator {
 
     void inject(ITraceContext context, HeaderCarrier carrier);

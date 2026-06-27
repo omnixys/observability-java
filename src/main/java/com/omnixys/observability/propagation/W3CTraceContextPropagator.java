@@ -9,6 +9,7 @@ import io.opentelemetry.context.propagation.TextMapSetter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Deprecated(forRemoval = true)
 public class W3CTraceContextPropagator implements ContextPropagator {
 
     @Override

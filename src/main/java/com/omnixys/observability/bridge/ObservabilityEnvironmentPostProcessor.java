@@ -9,26 +9,31 @@ import org.springframework.core.env.MapPropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Bridges Omnixys properties to Spring Boot management.* properties.
- */
 public class ObservabilityEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-
         String prometheusEnabled = environment.getProperty("omnixys.observability.metrics.prometheus-enabled", "true");
+
+        if (!Boolean.parseBoolean(prometheusEnabled)) {
+            return;
+        }
 
         Map<String, Object> props = new HashMap<>();
 
-        if (Boolean.parseBoolean(prometheusEnabled)) {
+        if (!environment.containsProperty("management.endpoint.prometheus.enabled")) {
             props.put("management.endpoint.prometheus.enabled", true);
+        }
+
+        if (!environment.containsProperty("management.endpoints.web.exposure.include")) {
             props.put("management.endpoints.web.exposure.include", "health,info,metrics,prometheus");
         }
 
-        environment.getPropertySources().addFirst(
-                new MapPropertySource("omnixys-observability-bridge", props)
-        );
+        if (!props.isEmpty()) {
+            environment.getPropertySources().addLast(
+                    new MapPropertySource("omnixys-observability-bridge", props)
+            );
+        }
     }
 
     @Override

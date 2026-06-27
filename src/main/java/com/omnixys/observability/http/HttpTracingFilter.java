@@ -1,5 +1,6 @@
 package com.omnixys.observability.http;
 
+import com.omnixys.observability.tracing.SpanEnricher;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.*;
 import io.opentelemetry.context.Scope;
@@ -53,8 +54,8 @@ public class HttpTracingFilter implements Filter {
                 .setParent(extractedContext)
                 .startSpan();
 
-        try (Scope scope = extractedContext.makeCurrent();
-             Scope scope2 = span.makeCurrent()) {
+        try (Scope scope = span.makeCurrent()) {
+            SpanEnricher.enrich(span);
 
             chain.doFilter(request, response);
             span.setAttribute("http.status_code", res.getStatus());

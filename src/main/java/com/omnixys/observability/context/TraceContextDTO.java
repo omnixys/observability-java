@@ -5,6 +5,7 @@ import io.opentelemetry.context.Context;
 /**
  * Immutable trace context representation.
  */
+@Deprecated(forRemoval = true)
 public record TraceContextDTO(
         String traceId,
         String spanId,

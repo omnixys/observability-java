@@ -17,6 +17,7 @@ import io.opentelemetry.sdk.trace.samplers.Sampler;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Factory for building OpenTelemetry SDK instance.
@@ -28,17 +29,12 @@ import java.util.Map;
  */
 public final class OpenTelemetryFactory {
 
-    private static volatile boolean initialized = false;
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
     private OpenTelemetryFactory() {}
 
-    public static synchronized OpenTelemetry create(ObservabilityProperties properties) {
-        System.out.println("🔥 OpenTelemetry initialized");
-
-        // ---------------------------------------------------------------------
-        // Prevent double initialization (important for DevTools)
-        // ---------------------------------------------------------------------
-        if (initialized) {
+    public static OpenTelemetry create(ObservabilityProperties properties) {
+        if (!initialized.compareAndSet(false, true)) {
             return GlobalOpenTelemetry.get();
         }
 
@@ -108,7 +104,7 @@ public final class OpenTelemetryFactory {
         // OpenTelemetry SDK (CORRECT)
         // ---------------------------------------------------------------------
         OpenTelemetrySdk sdk = OpenTelemetrySdk.builder()
-                .setTracerProvider(tracerProvider) // ✅ CRITICAL FIX
+                .setTracerProvider(tracerProvider)
                 .setPropagators(ContextPropagators.create(
                         W3CTraceContextPropagator.getInstance()
                 ))
@@ -118,8 +114,6 @@ public final class OpenTelemetryFactory {
         // Set global ONCE
         // ---------------------------------------------------------------------
         GlobalOpenTelemetry.set(sdk);
-
-        initialized = true;
 
         return sdk;
     }
