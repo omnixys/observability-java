@@ -3,6 +3,37 @@
 All notable changes in this project will be documented in this file.
 
 
+## 1.0.0 (2026-06-27)
+
+### Api
+
+* **Api:** Add OpenTelemetry tracing APIs and integrations ([](https://github.com/omnixys/observability-java/commit/e623167d4e066139baeaaf9167ac0c97475b7f59))
+
+### CD/CI
+
+* **CD/CI:** add action workflows ([](https://github.com/omnixys/observability-java/commit/965d9ebffe65415d0c7d2875b0e87b45f09fe3cf))
+* **CD/CI:** add action workflows ([](https://github.com/omnixys/observability-java/commit/0321ff2ca7407f55a9747bb077a4ed9a8ffd7603))
+
+### Init
+
+* **Init:** initial commit ([](https://github.com/omnixys/observability-java/commit/255896933a2dcff64793e02e81bded9be2947649))
+
+### Other
+
+* **Other:** Initial commit ([](https://github.com/omnixys/observability-java/commit/3dc41c480c067a62a461604fb3cc82b098496308))
+* **Other:** Merge branch 'main' of https://github.com/omnixys/observability-java ([](https://github.com/omnixys/observability-java/commit/1a4ee6a9b6ad7dca477baced0f8aca99dcb0cc81))
+
+### Release
+
+* **Release:** 1.0.0 [skip ci] ([](https://github.com/omnixys/observability-java/commit/cb6ea1d8ec1b0b1cf08686b4fccb7b6188e5d8b0))
+* **Release:** 1.0.0 [skip ci] ([](https://github.com/omnixys/observability-java/commit/9d50d584ed99d92b87abb25582921820a26c7a8f))
+* **Release:** 2.0.0 [skip ci] ([](https://github.com/omnixys/observability-java/commit/a270f31415640782fb7de2d106e9c04de53c3fb0))
+* **Release:** 2.0.0 [skip ci] ([](https://github.com/omnixys/observability-java/commit/edfc6e817670bf63c99cd952f3848cfd9d2c54c8))
+
+### Test
+
+* **Test:** test ([](https://github.com/omnixys/observability-java/commit/74136383a8bf76f5f6ffff427edbc0023308e043))
+
 ## [2.0.0](https://github.com/omnixys/observability-java/compare/v1.0.0...v2.0.0) (2026-06-27)
 
 ### CD/CI
