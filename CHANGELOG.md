@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.0.0](https://github.com/omnixys/observability-java/compare/v1.0.0...v2.0.0) (2026-06-27)
+
+### CD/CI
+
+* **CD/CI:** add action workflows ([](https://github.com/omnixys/observability-java/commit/0321ff2ca7407f55a9747bb077a4ed9a8ffd7603))
+
 ## 1.0.0 (2026-04-17)
 
 ### Api
