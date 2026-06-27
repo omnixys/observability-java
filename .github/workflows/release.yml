@@ -113,7 +113,8 @@ jobs:
           </settings>
           EOF
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
 
       # 🚀 FINAL publish (uses version from pom.xml)
       - name: Build & Publish
