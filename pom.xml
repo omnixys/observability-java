@@ -14,7 +14,7 @@
 
     <groupId>com.omnixys</groupId>
     <artifactId>observability</artifactId>
-    <version>2.0.0</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>Omnixys Observability Package</name>
