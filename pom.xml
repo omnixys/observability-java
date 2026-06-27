@@ -64,6 +64,18 @@
         </repository>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <id>github-commons</id>
+            <url>https://maven.pkg.github.com/omnixys/commons-java</url>
+        </repository>
+
+        <repository>
+            <id>github-context</id>
+            <url>https://maven.pkg.github.com/omnixys/context-java</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- OpenTelemetry — versions managed by spring-boot-dependencies BOM -->
         <dependency>
