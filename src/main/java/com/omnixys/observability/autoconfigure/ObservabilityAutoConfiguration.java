@@ -9,6 +9,7 @@ import com.omnixys.observability.health.OpenTelemetryHealthIndicator;
 import com.omnixys.observability.kafka.KafkaTracing;
 import com.omnixys.observability.kafka.OpenTelemetryKafkaTracing;
 import com.omnixys.observability.logging.ErrorClassifier;
+import com.omnixys.observability.logging.LogbackBridgeInstaller;
 import com.omnixys.observability.metrics.MetricsAutoConfiguration;
 import com.omnixys.observability.metrics.RateLimitMetrics;
 import com.omnixys.observability.metrics.SloMetricsService;
@@ -40,7 +41,11 @@ public class ObservabilityAutoConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "omnixys.observability.tracing", name = "enabled", havingValue = "true", matchIfMissing = true)
     public OpenTelemetry openTelemetry() {
-        return OpenTelemetryFactory.create(properties);
+        OpenTelemetry openTelemetry = OpenTelemetryFactory.create(properties);
+        if (properties.getLogs().isEnabled()) {
+            LogbackBridgeInstaller.install(openTelemetry);
+        }
+        return openTelemetry;
     }
 
     @Bean

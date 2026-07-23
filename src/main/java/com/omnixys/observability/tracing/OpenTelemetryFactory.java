@@ -8,9 +8,13 @@ import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
+import io.opentelemetry.exporter.otlp.http.logs.OtlpHttpLogRecordExporter;
+import io.opentelemetry.exporter.otlp.logs.OtlpGrpcLogRecordExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.sdk.resources.Resource;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
+import io.opentelemetry.sdk.logs.export.BatchLogRecordProcessor;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 import io.opentelemetry.sdk.trace.samplers.Sampler;
@@ -42,7 +46,8 @@ public final class OpenTelemetryFactory {
         // Resource (service metadata)
         // ---------------------------------------------------------------------
         AttributesBuilder attributesBuilder = Attributes.builder()
-                .put("service.name", properties.getServiceName());
+                .put("service.name", properties.getServiceName())
+                .put("service.namespace", "omnixys");
 
         if (properties.getResourceAttributes() != null) {
             for (Map.Entry<String, String> entry : properties.getResourceAttributes().entrySet()) {
@@ -57,11 +62,12 @@ public final class OpenTelemetryFactory {
         // Exporter (HTTP or gRPC)
         // ---------------------------------------------------------------------
         BatchSpanProcessor spanProcessor;
+        String endpoint = baseEndpoint(properties.getOtlp().getEndpoint());
 
         if ("grpc".equalsIgnoreCase(properties.getOtlp().getTransport())) {
 
             OtlpGrpcSpanExporter exporter = OtlpGrpcSpanExporter.builder()
-                    .setEndpoint(properties.getOtlp().getEndpoint())
+                    .setEndpoint(endpoint)
                     .setTimeout(Duration.ofSeconds(10))
                     .build();
 
@@ -70,7 +76,7 @@ public final class OpenTelemetryFactory {
         } else {
 
             OtlpHttpSpanExporter exporter = OtlpHttpSpanExporter.builder()
-                    .setEndpoint(properties.getOtlp().getEndpoint())
+                    .setEndpoint(endpoint + "/v1/traces")
                     .setTimeout(Duration.ofSeconds(10))
                     .build();
 
@@ -95,16 +101,46 @@ public final class OpenTelemetryFactory {
                 .addSpanProcessor(spanProcessor)
                 .build();
 
+        SdkLoggerProvider loggerProvider;
+        if (properties.getLogs().isEnabled()) {
+            BatchLogRecordProcessor logProcessor;
+            if ("grpc".equalsIgnoreCase(properties.getOtlp().getTransport())) {
+                logProcessor = BatchLogRecordProcessor.builder(
+                        OtlpGrpcLogRecordExporter.builder()
+                                .setEndpoint(endpoint)
+                                .setTimeout(Duration.ofSeconds(10))
+                                .build()
+                ).build();
+            } else {
+                logProcessor = BatchLogRecordProcessor.builder(
+                        OtlpHttpLogRecordExporter.builder()
+                                .setEndpoint(endpoint + "/v1/logs")
+                                .setTimeout(Duration.ofSeconds(10))
+                                .build()
+                ).build();
+            }
+            loggerProvider = SdkLoggerProvider.builder()
+                    .setResource(resource)
+                    .addLogRecordProcessor(logProcessor)
+                    .build();
+        } else {
+            loggerProvider = SdkLoggerProvider.builder().setResource(resource).build();
+        }
+
         // ---------------------------------------------------------------------
         // Graceful shutdown
         // ---------------------------------------------------------------------
-        Runtime.getRuntime().addShutdownHook(new Thread(tracerProvider::close));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            loggerProvider.close();
+            tracerProvider.close();
+        }));
 
         // ---------------------------------------------------------------------
         // OpenTelemetry SDK (CORRECT)
         // ---------------------------------------------------------------------
         OpenTelemetrySdk sdk = OpenTelemetrySdk.builder()
                 .setTracerProvider(tracerProvider)
+                .setLoggerProvider(loggerProvider)
                 .setPropagators(ContextPropagators.create(
                         W3CTraceContextPropagator.getInstance()
                 ))
@@ -116,5 +152,10 @@ public final class OpenTelemetryFactory {
         GlobalOpenTelemetry.set(sdk);
 
         return sdk;
+    }
+
+    private static String baseEndpoint(String endpoint) {
+        String base = endpoint.replaceAll("/+$", "");
+        return base.replaceFirst("/v1/(?:traces|logs)$", "");
     }
 }

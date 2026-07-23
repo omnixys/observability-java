@@ -24,6 +24,8 @@ public class ObservabilityProperties {
 
     private Metrics metrics = new Metrics();
 
+    private Logs logs = new Logs();
+
     private Otlp otlp = new Otlp();
 
     private Map<String, String> resourceAttributes = new HashMap<>();
@@ -64,6 +66,12 @@ public class ObservabilityProperties {
 
         private boolean prometheusEnabled = true;
 
+    }
+
+    @Setter
+    @Getter
+    public static class Logs {
+        private boolean enabled = true;
     }
 
     @Getter
