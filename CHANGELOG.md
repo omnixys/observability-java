@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.1.0](https://github.com/omnixys/observability-java/compare/v1.0.1...v1.1.0) (2026-07-23)
+
+### Observability
+
+* **Observability:** export logs through OpenTelemetry ([](https://github.com/omnixys/observability-java/commit/c0cbe90319d6e69e209a808e4b39591c71771c60))
+
 ## [1.0.1](https://github.com/omnixys/observability-java/compare/v1.0.0...v1.0.1) (2026-07-16)
 
 ### Deps
