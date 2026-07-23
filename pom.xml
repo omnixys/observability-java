@@ -57,7 +57,7 @@
         <maven.compiler.release>26</maven.compiler.release>
 
         <omnixys.commons.version>1.0.4</omnixys.commons.version>
-        <omnixys.context.version>1.0.3</omnixys.context.version>
+        <omnixys.context.version>1.0.2</omnixys.context.version>
     </properties>
 
     <distributionManagement>
