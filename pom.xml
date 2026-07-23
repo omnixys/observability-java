@@ -55,11 +55,14 @@
     <properties>
         <java.version>26</java.version>
         <maven.compiler.release>26</maven.compiler.release>
+
+        <omnixys.commons.version>1.0.4</omnixys.commons.version>
+        <omnixys.context.version>1.0.3</omnixys.context.version>
     </properties>
 
     <distributionManagement>
         <repository>
-            <id>github-commons</id>
+            <id>github-observability</id>
             <url>https://maven.pkg.github.com/omnixys/observability-java</url>
         </repository>
     </distributionManagement>
@@ -157,13 +160,13 @@
         <dependency>
             <groupId>com.omnixys</groupId>
             <artifactId>commons</artifactId>
-            <version>1.0.0</version>
+            <version>${omnixys.commons.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.omnixys</groupId>
             <artifactId>context</artifactId>
-            <version>1.0.0</version>
+            <version>${omnixys.context.version}</version>
         </dependency>
 
         <!-- Config metadata -->

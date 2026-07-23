@@ -108,6 +108,12 @@ jobs:
                 <username>${GITHUB_ACTOR}</username>
                 <password>${GITHUB_TOKEN}</password>
               </server>
+
+              <server>
+                <id>github-observability</id>
+                <username>${GITHUB_ACTOR}</username>
+                <password>${GITHUB_TOKEN}</password>
+              </server>
           
             </servers>
           </settings>
