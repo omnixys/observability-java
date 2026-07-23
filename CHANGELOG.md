@@ -3,6 +3,16 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.1.2](https://github.com/omnixys/observability-java/compare/v1.1.1...v1.1.2) (2026-07-23)
+
+### Deps
+
+* **Deps:** update commons+context deps version ([](https://github.com/omnixys/observability-java/commit/1e53baa58ff0bf5be88fcdebad3d72d688a956d7))
+
+### Other
+
+* **Other:** Merge branch 'main' of https://github.com/omnixys/observability-java ([](https://github.com/omnixys/observability-java/commit/ab92f9a4b2923b2c8cc1414b2bb9149e99b469ce))
+
 ## [1.1.1](https://github.com/omnixys/observability-java/compare/v1.1.0...v1.1.1) (2026-07-23)
 
 ### Deps
