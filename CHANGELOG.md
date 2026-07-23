@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.1.1](https://github.com/omnixys/observability-java/compare/v1.1.0...v1.1.1) (2026-07-23)
+
+### Deps
+
+* **Deps:** update commons+context deps version ([](https://github.com/omnixys/observability-java/commit/a75bcf2608583420ad2605c838e38977ccceb01e))
+
 ## [1.1.0](https://github.com/omnixys/observability-java/compare/v1.0.1...v1.1.0) (2026-07-23)
 
 ### Observability
