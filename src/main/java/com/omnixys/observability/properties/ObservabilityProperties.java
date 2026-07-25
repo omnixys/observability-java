@@ -74,6 +74,7 @@ public class ObservabilityProperties {
         private boolean enabled = true;
     }
 
+    @Setter
     @Getter
     public static class Otlp {
 
