@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 @EnableConfigurationProperties(ObservabilityProperties.class)
@@ -40,10 +41,14 @@ public class ObservabilityAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "omnixys.observability.tracing", name = "enabled", havingValue = "true", matchIfMissing = true)
-    public OpenTelemetry openTelemetry() {
+    public OpenTelemetry openTelemetry(ObservabilityProperties properties, Environment environment) {
         OpenTelemetry openTelemetry = OpenTelemetryFactory.create(properties);
         if (properties.getLogs().isEnabled()) {
-            LogbackBridgeInstaller.install(openTelemetry);
+            LogbackBridgeInstaller.install(
+                    openTelemetry,
+                    properties,
+                    environment.getProperty("spring.application.name")
+            );
         }
         return openTelemetry;
     }

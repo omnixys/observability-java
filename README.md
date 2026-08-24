@@ -44,6 +44,36 @@ omnixys:
       endpoint: http://tempo:4318
 ```
 
+### Logs (Log → Grafana/Loki)
+
+SLF4J/Logback records are bridged to the OTel logs signal (OTLP), which feeds
+Grafana Loki via the Omnixys collector. Console and Loki have independent
+thresholds so production consoles stay quiet while debug logs remain visible
+in Grafana:
+
+```yaml
+omnixys:
+  observability:
+    logs:
+      enabled: true            # install the OTel logback bridge (default: true)
+      level: DEBUG             # minimum severity forwarded to Loki (default: DEBUG)
+      console-threshold: INFO  # minimum severity kept on console appenders (default: INFO)
+      logger-name: com.omnixys.address  # base logger whose records must reach Loki;
+                                        # derived from spring.application.name when empty
+                                        # ("address-service" -> "com.omnixys.address")
+```
+
+Behavior:
+
+- The bridge appender only forwards records at or above `logs.level`
+  (default `DEBUG`) — set it to `INFO`/`WARNING` to throttle Loki.
+- Console appenders receive a threshold filter at `console-threshold`
+  (default `INFO`); existing filters are respected and not duplicated.
+- The service package logger is lowered to `DEBUG` if its effective level is
+  more restrictive, so application debug logs reach Loki. Framework loggers
+  (`org.hibernate`, `io.kafka`, …) stay on their configured levels.
+- Installation is idempotent — exactly one `OMNIXYS_OTEL` appender exists.
+
 ---
 
 ## 🧠 How it works
