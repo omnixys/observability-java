@@ -72,6 +72,26 @@ public class ObservabilityProperties {
     @Getter
     public static class Logs {
         private boolean enabled = true;
+
+        /**
+         * Minimum severity forwarded to the OTel logs signal (Loki). Defaults to
+         * DEBUG so debug logs remain visible in Grafana while the console can
+         * stay on a higher threshold.
+         */
+        private String level = "DEBUG";
+
+        /**
+         * Minimum severity kept on console appenders after bridge installation.
+         * Keeps production consoles quiet while debug logs still reach Loki.
+         */
+        private String consoleThreshold = "INFO";
+
+        /**
+         * Fully qualified base logger name (e.g. {@code com.omnixys.address})
+         * whose records must reach the OTel bridge regardless of the root
+         * level. Derived from {@code spring.application.name} when left empty.
+         */
+        private String loggerName;
     }
 
     @Setter
