@@ -3,6 +3,29 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.2.0](https://github.com/omnixys/observability-java/compare/v1.1.3...v1.2.0) (2026-09-03)
+
+### Agent
+
+* **Agent:** add repository development instructions ([](https://github.com/omnixys/observability-java/commit/808ca4e46c7cc8ceb03a4e2fa5757736d58c30f1))
+
+### Ci
+
+* **Ci:** add update release rule for patch releases ([](https://github.com/omnixys/observability-java/commit/3cd0f2c19ddb6671c5ea7f90dad5627df8aea46f))
+* **Ci:** align CI structure with full workflow set, 3-job release, and pinned conventionalcommits ([](https://github.com/omnixys/observability-java/commit/a1d975ec4ae91cc3bbc845fca456c03446b511a5))
+
+### Logging
+
+* **Logging:** decouple console threshold from otlp log level ([](https://github.com/omnixys/observability-java/commit/aa827ff8dd3a97f891b69630447d61601070e467))
+
+### Other
+
+* **Other:** Merge pull request #1 from omnixys/migration/uuid-v7 ([](https://github.com/omnixys/observability-java/commit/40e474e92d015a6f89ce251cca3c0926a53fd1e7)), closes [#1](https://github.com/omnixys/observability-java/issues/1)
+
+### Runtime
+
+* **Runtime:** align spring boot and build toolchain to local standard ([](https://github.com/omnixys/observability-java/commit/bf873a6d9145833ece789d41824845724264d805))
+
 ## [1.1.3](https://github.com/omnixys/observability-java/compare/v1.1.2...v1.1.3) (2026-07-25)
 
 ### Properties
